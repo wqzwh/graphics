@@ -123,3 +123,93 @@ C.createLeaf = (ctx, n, dx, dy, size, length, isFill, color = '#cccccc') => {
     ctx.strokeStyle = color
   }
 }
+
+/**
+ * 图片转换效果
+ * @param {*} data 图片对应的像素数据 
+ */
+C.inverseEffect = (data) => {
+  for (let i = 0; i < data.length; i+=4) {
+    data[i + 0] = 255 - data[i + 0]
+    data[i + 1] = 255 - data[i + 1]
+    data[i + 2] = 255 - data[i + 2]
+  }
+  return data
+}
+
+/**
+ * 黑白效果
+ * @param {*} data 图片对应的像素数据 
+ * @param array weight 黑白效果对应的权重数据，分别代表红、绿、蓝
+ */
+C.blackWhiteEffect = (data, weight = [1, 1, 1]) => {
+  for (let i = 0; i < data.length; i+=4) {
+    const average = (data[i] * weight[0] + data[i + 1] * weight[1] + data[i + 2] * weight[2]+ data[i + 3]) / 3
+    data[i + 0] = average
+    data[i + 1] = average
+    data[i + 2] = average
+  }
+  return data
+}
+
+/**
+ * 亮度效果
+ * @param {*} data 图片对应的像素数据 
+ * @param number weight
+ */
+C.brightnessEffect = (data, weight = 0) => {
+  for (let i = 0; i < data.length; i+=4) {
+    data[i + 0] += weight
+    data[i + 1] += weight
+    data[i + 2] += weight
+  }
+  return data
+}
+
+/**
+ * 复古效果
+ * @param {*} data 图片对应的像素数据 
+ * @param array weight 二维数组
+ */
+C.retroEffect = (data, weight = [[1, 1, 1], [1, 1, 1], [1, 1, 1]]) => {
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i]
+    const g = data[i + 1]
+    const b = data[i + 2]
+
+    data[i] = r * weight[0][0] + g * weight[0][1] + b * weight[0][2]
+    data[i + 1] = r * weight[1][0] + g * weight[1][1] + b * weight[1][2]
+    data[i + 2] = r * weight[2][0] + g * weight[2][1] + b * weight[2][2]
+  }
+  return data
+}
+
+/**
+ * 红色效果
+ * @param {*} data 图片对应的像素数据 
+ */
+C.redEffect = (data) => {
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i]
+    const g = data[i + 1]
+    const b = data[i + 2]
+
+    const average = (r + g + b) / 3
+    data[i] = average
+    data[i + 1] = 0
+    data[i + 2] = 0
+  }
+  return data
+}
+
+/**
+ * 透明效果
+ * @param {*} data 图片对应的像素数据
+ * @param number o 透明度设置
+ */
+C.transparencyEffect = (data, o = 1) => {
+  for (let i = 0; i < data.length; i += 4) {
+    data[i + 3] = data[i + 3] * o
+  }
+  return data
+}

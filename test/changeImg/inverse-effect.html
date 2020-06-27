@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #canvas {
+      border: 1px solid #ddd;
+      position: absolute;
+      left: 10%;
+      top: 5%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script src="../../src/utils.js"></script>
+  <script>
+    const dom = document.getElementById('canvas')
+    const ctx = dom.getContext('2d')
+
+    dom.width = 1200
+    dom.height = 500
+
+    const img = new Image()
+    img.src = '../../img/1.jpg'
+
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0)
+      const imgData = ctx.getImageData(0, 0, 500, 500)
+      const data = C.inverseEffect(imgData.data)
+      ctx.putImageData(imgData, 510, 0);
+    }
+  </script>
+</body>
+</html>
