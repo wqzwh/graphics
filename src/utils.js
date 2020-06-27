@@ -213,3 +213,66 @@ C.transparencyEffect = (data, o = 1) => {
   }
   return data
 }
+
+/**
+ * 获取鼠标位置
+ * @param {*} ele canvasDom 
+ */
+C.getMouse = (ele) => {
+  const mouse = {
+    x: 0,
+    y: 0
+  }
+  ele.addEventListener('mousemove', (_e) => {
+    let x, y
+    let e = _e || window.event
+    if (e.pageX || e.pageY) {
+        x = e.pageX
+        y = e.pageY
+    } else {
+      // ie8以下，复杂模式下的谷歌浏览器
+        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft
+        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop
+    }
+    x -= ele.offsetLeft
+    y -= ele.offsetTop
+
+    mouse.x = x
+    mouse.y = y
+  }, false)
+  return mouse
+}
+
+/**
+ * 获取键盘控制方向
+ */
+C.getKey = () => {
+  const key = {}
+  window.addEventListener('keydown', (e) => {
+    if (e.keyCode === 38 || e.keyCode === 87) {
+      key.direction = 'up'
+    } else if (e.keyCode === 39 || e.keyCode === 68) {
+      key.direction = 'right'
+    } else if (e.keyCode === 40 || e.keyCode === 83) {
+      key.direction = 'down'
+    } else if (e.keyCode === 37 || e.keyCode === 65) {
+      key.direction = 'left'
+    } else {
+      key.direction = ''
+    }
+  }, false)
+  return key
+}
+
+/**
+ * 动画循环，兼容各大浏览器
+ */
+window.requestAnimationFrame = (
+  window.requestAnimationFrame ||
+  window.mozRequestAnimationFrame ||
+  window.msRequestAnimationFrame ||
+  window.oRequestAnimationFrame ||
+  function (callback) {
+      return window.setTimeout(callback, 1000 / 60)
+  }
+)

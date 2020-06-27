@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #canvas {
+      border: 1px solid #ddd;
+      position: absolute;
+      left: 10%;
+      top: 5%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <p id="txt"></p>
+  <script src="../src/utils.js"></script>
+  <script>
+    window.onload = () => {
+      const dom = document.getElementById('canvas')
+      const ctx = dom.getContext('2d')
+
+      dom.width = 1200
+      dom.height = 500
+
+      function drawBall(x, y) {
+        ctx.beginPath()
+        ctx.arc(x, y, 20, 0, Math.PI / 180 * 360, true)
+        ctx.closePath()
+        ctx.fillStyle = 'red'
+        ctx.fill()
+      }
+
+      // 初始化一个圆
+      drawBall(dom.width / 2, dom.height / 2)
+      
+      // 初始化变量
+      let x = 100
+      let y = 90
+
+      const key = C.getKey()
+
+      window.addEventListener('keydown', (e) => {
+        ctx.clearRect(0, 0, dom.width, dom.height)
+        switch (key.direction) {
+          case 'up':
+            y -=5
+            drawBall(x, y)
+            break
+          case 'down':
+            y +=5
+            drawBall(x, y)
+            break
+          case 'left':
+            x -=5
+            drawBall(x, y)
+            break
+          case 'right':
+            x += 5
+            drawBall(x, y)
+            break
+          default:
+            drawBall(x, y)      
+        }
+      })
+    }
+  </script>
+</body>
+</html>
