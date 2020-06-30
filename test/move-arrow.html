@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #canvas {
+      border: 1px solid #ddd;
+      position: absolute;
+      left: 10%;
+      top: 5%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script src="../src/utils.js"></script>
+  <script src="../src/arrow.js"></script>
+  <script>
+    window.onload = function () {
+      const dom = document.getElementById('canvas')
+      const ctx = dom.getContext('2d')
+
+      dom.width = 1200
+      dom.height = 500
+
+      const arrow = new Arrow(dom.width / 2, dom.height / 2)
+
+      const mouse = C.getMouse(dom)
+
+      function drawFrame() {
+        window.requestAnimationFrame(drawFrame, dom)
+        ctx.clearRect(0, 0, dom.width, dom.height)
+        
+        const dx = mouse.x - dom.width / 2
+        const dy = mouse.y - dom.height / 2
+
+        arrow.angle = Math.atan2(dy, dx)
+
+        arrow.fill(ctx)
+      }
+      drawFrame()
+    }
+  </script>
+</body>
+</html>
