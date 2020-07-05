@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #canvas {
+      border: 1px solid #ddd;
+      position: absolute;
+      left: 10%;
+      top: 5%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <p id="txt"></p>
+  <script src="../src/utils.js"></script>
+  <script src="../src/ball.js"></script>
+  <script>
+    window.onload = () => {
+      const dom = document.getElementById('canvas')
+      const ctx = dom.getContext('2d')
+
+      dom.width = 1200
+      dom.height = 500
+
+      const ball = new Ball(dom.width / 2, dom.height / 2, 20)
+
+      const mouse = C.getMouse(dom)
+      const easing = 0.05
+
+      function frame() {
+        window.requestAnimationFrame(frame, dom)
+        ctx.clearRect(0, 0, dom.width, dom.height)
+
+        const vx = ( mouse.x - ball.x ) * easing
+        const vy = ( mouse.y - ball.y ) * easing
+
+        ball.x += vx
+        ball.y += vy
+
+        ball.fill(ctx)
+      }
+      frame()
+    }
+  </script>
+</body>
+</html>
