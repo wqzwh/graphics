@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #canvas {
+      border: 1px solid #ddd;
+      position: absolute;
+      left: 10%;
+      top: 5%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <p id="txt"></p>
+  <script src="../src/utils.js"></script>
+  <script src="../src/ball.js"></script>
+  <script>
+    window.onload = () => {
+      const dom = document.getElementById('canvas')
+      const ctx = dom.getContext('2d')
+
+      dom.width = 1200
+      dom.height = 500
+
+      const n = 8 // 定义8个小球
+      const balls = []
+      let ball = null
+
+      for (let i = 0; i < n; i++) {
+        ball = new Ball()
+        ball.x = Math.random() * dom.width
+        ball.y = Math.random() * dom.height
+        ball.r = 10
+        ball.color = C.getRandomColor()
+        ball.vx = Math.random() * 6 - 3
+        ball.vy = Math.random() * 6 - 3
+
+        balls.push(ball)
+      }
+
+      // 碰撞检测
+      function checkCollision(ballA, i) {
+        for (let j = i + 1; j < balls.length; j++) {
+          let ballB = balls[j]
+          // 如果两个小球碰撞，碰撞后vx,vy都取相反值
+          if (C.checkCircle(ballB, ballA)) {
+            ballA.vx = - ballA.vx
+            ballA.vy = - ballA.vy
+            ballB.vx = - ballB.vx
+            ballB.vy = - ballB.vy
+
+            // 每次碰撞，小球x、y增加偏移量，避免相互重叠
+            if (ballA.vx > 0) {
+              ballA += 5
+            } else {
+              ballA.x -= 5
+            }
+            if (ballA.vy > 0) {
+              ballA.y += 5
+            } else {
+              ballA.x -= 5
+            }
+
+            if (ballB.vx > 0) {
+              ballB += 5
+            } else {
+              ballB.x -= 5
+            }
+            if (ballB.vy > 0) {
+              ballB.y += 5
+            } else {
+              ballB.x -= 5
+            }
+          }
+        }
+      }
+
+      // 边界检测
+      function checkBorder(ball) {
+        // 左边界
+        if (ball.x < ball.r) {
+          ball.x = ball.r
+          ball.vx = - ball.vx
+        } else if (ball.x > dom.width - ball.r) {
+          // 右边界
+          ball.x = dom.width - ball.r
+          ball.vx = -ball.vx
+        }
+
+        // 上边界
+        if (ball.y < ball.r) {
+          ball.y = ball.r
+          ball.vy = -ball.vy
+        } else if (ball.y > dom.height - ball.r) {
+          ball.y = dom.height - ball.r
+          ball.vy = -ball.vy
+        }
+      }
+
+      // 绘制小球
+      function drawBall(ball) {
+        ball.fill(ctx)
+        ball.x += ball.vx
+        ball.y += ball.vy
+      }
+
+      function frame() {
+        window.requestAnimationFrame(frame, dom)
+        ctx.clearRect(0, 0, dom.width, dom.height)
+
+        // 碰撞检测
+        balls.forEach(checkCollision)
+
+        // 边界检测
+        balls.forEach(checkBorder)
+
+        // 绘制小球
+        balls.forEach(drawBall)
+      }
+      frame()
+    }
+  </script>
+</body>
+</html>

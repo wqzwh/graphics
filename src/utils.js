@@ -276,3 +276,37 @@ window.requestAnimationFrame = (
       return window.setTimeout(callback, 1000 / 60)
   }
 )
+
+/** 
+ *
+ * 随机颜色 
+*/
+C.getRandomColor = () => {
+  const color = (function(color){
+    return (color += '0123456789abcdef'[Math.floor(Math.random() * 16)]) && (color.length === 6) ? color : arguments.callee(color)
+  })('')
+  return `#${color}`
+}
+
+/**
+ * 判断两个矩形是否发生碰撞：两个矩形左上角的坐标范围
+ * @param {*} rectA 
+ * @param {*} rectB 
+ */
+C.checkRect = (rectA, rectB) => {
+  return !(rectA.x + rectA.width < rectB.x ||
+          rectB.x + rectB.width < rectA.x ||
+          rectA.y + rectA.height < rectB.y ||
+          rectB.y + rectB.height < rectA.y)
+}
+
+C.checkCircle = (circleA, circleB) => {
+  const dx = circleB.x - circleA.x
+  const dy = circleB.y - circleA.y
+  const distance = Math.sqrt(dx * dx + dy * dy)
+  if (distance < (circleA.r + circleB.r)) {
+    return true
+  } else {
+    return false
+  }
+}

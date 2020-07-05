@@ -7,6 +7,10 @@ class Ball {
 
     this.scaleX = 1
     this.scaleY = 1
+
+    // x,y方向的速度
+    this.vx = 1
+    this.vy = 1
   }
 
   // 绘制描边小球
@@ -32,5 +36,16 @@ class Ball {
     ctx.closePath()
     ctx.fill()
     ctx.restore()
+  }
+
+  // 求出小球的外接矩形
+  geRect() {
+    const rect = {
+      x: this.x - this.r,
+      y: this.y - this.r,
+      width: this.r * 2,
+      height: this.r * 2
+    }
+    return rect
   }
 }
