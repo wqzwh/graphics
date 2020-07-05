@@ -48,4 +48,16 @@ class Ball {
     }
     return rect
   }
+
+  // 检测是否被捕获
+  checkMouse(mouse) {
+    const dx = mouse.x - this.x
+    const dy = mouse.y - this.y
+    const distance = Math.sqrt(dx * dx + dy * dy)
+    if (distance < this.r) {
+      return true
+    } else {
+      return false
+    }
+  }
 }

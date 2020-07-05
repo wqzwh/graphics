@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #canvas {
+      border: 1px solid #ddd;
+      position: absolute;
+      left: 10%;
+      top: 5%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <p id="txt"></p>
+  <script src="../src/utils.js"></script>
+  <script src="../src/ball.js"></script>
+  <script>
+    window.onload = () => {
+      const dom = document.getElementById('canvas')
+      const ctx = dom.getContext('2d')
+
+      dom.width = 1200
+      dom.height = 500
+
+      const ball = new Ball(dom.width / 2, dom.height / 2, 20)
+      ball.fill(ctx)
+
+      // 定义偏移量
+      let dx = 0
+      let dy = 0
+
+      const mouse = C.getMouse(dom)
+
+      // 添加鼠标按下事件
+      dom.addEventListener('mousedown', () => {
+        // 判断鼠标点击是否落在小球上，如果落在，则添加两个事件：mousemove、mouseup
+        if (ball.checkMouse(mouse)) {
+
+          dx = mouse.x - ball.x
+          dy = mouse.y - ball.y
+
+          document.addEventListener('mousemove', onMouseMove, false)
+          document.addEventListener('mouseup', onMouseUp, false)
+        }
+      }, false)
+
+      dom.addEventListener('mouseup', () => {
+        onMouseUp()
+      }, false)
+
+      // 边界检测
+      function checkBorder(ball) {
+        // 左边界
+        if (ball.x < ball.r) {
+          ball.x = ball.r
+          ball.vx = - ball.vx
+        } else if (ball.x > dom.width - ball.r) {
+          // 右边界
+          ball.x = dom.width - ball.r
+          ball.vx = -ball.vx
+        }
+
+        // 上边界
+        if (ball.y < ball.r) {
+          ball.y = ball.r
+          ball.vy = -ball.vy
+        } else if (ball.y > dom.height - ball.r) {
+          ball.y = dom.height - ball.r
+          ball.vy = -ball.vy
+        }
+      }
+
+      function onMouseMove() {
+        ball.x = mouse.x - dx
+        ball.y = mouse.y - dy
+
+        // 边界检测
+        checkBorder(ball)
+      }
+
+      function onMouseUp() {
+        document.removeEventListener('mouseup', onMouseUp, false)
+        document.removeEventListener('mousemove', onMouseMove, false)
+      }
+
+      function frame() {
+        window.requestAnimationFrame(frame, dom)
+        ctx.clearRect(0, 0, dom.width, dom.height)
+
+        ball.fill(ctx)
+      }
+      frame()
+    }
+  </script>
+</body>
+</html>
