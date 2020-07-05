@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #canvas {
+      border: 1px solid #ddd;
+      position: absolute;
+      left: 10%;
+      top: 5%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <p id="txt"></p>
+  <script src="../src/utils.js"></script>
+  <script src="../src/ball.js"></script>
+  <script>
+    window.onload = () => {
+      const dom = document.getElementById('canvas')
+      const ctx = dom.getContext('2d')
+
+      dom.width = 1200
+      dom.height = 500
+
+      // 初始化小球
+      const ball = new Ball()
+      const centerX = dom.width / 2
+      const centerY = dom.height / 2
+      const r = 150
+      let angle = 0
+      let rX = 60
+      let rY = 40
+
+      function frame() {
+        window.requestAnimationFrame(frame, dom)
+        ctx.clearRect(0, 0, dom.width, dom.height)
+
+        // 绘制圆形
+        ctx.beginPath()
+        ctx.strokeStyle = 'red'
+        ctx.ellipse(centerX, centerY, rX, rY, 0, 360 * Math.PI / 180, false)
+        ctx.closePath()
+        ctx.stroke()
+
+        // 计算小球坐标
+        ball.x = centerX + Math.cos(angle) * rX
+        ball.y = centerY + Math.sin(angle) * rY
+        ball.fill(ctx)
+
+        // 改变角度
+        angle += 0.05
+      }
+      frame()
+    }
+  </script>
+</body>
+</html>
