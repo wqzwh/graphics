@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #canvas {
+      border: 1px solid #ddd;
+      position: absolute;
+      left: 10%;
+      top: 5%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script src="../src/utils.js"></script>
+  <script src="../src/vector2d.js"></script>
+  <script>
+    window.onload = function () {
+      const dom = document.getElementById('canvas')
+      const ctx = dom.getContext('2d')
+
+      dom.width = 500
+      dom.height = 500
+
+      // 变换坐标，将坐标的顶点转换成画布的中心点，y轴变成向上
+      ctx.translate(0, dom.height)
+      ctx.scale(1, -1)
+      ctx.lineCap = 'round'
+      
+      /**
+        ctx Canvas2D 上下文
+        v0是起始向量
+        length是当前树枝的长度
+        thickness 是当前树枝的粗细
+        dir 是当前树枝的方向，用与 x 轴的夹角表示，单位是弧度。
+        bias 是一个随机偏向因子，用来让树枝的朝向有一定的随机性
+      */
+      function drawBranch(ctx, v0, length, thickness, dir, bias) {
+        const v = new Vector2D(1, 0).rotate(dir).scale(length)
+        const v1 = v0.copy().add(v)
+
+        ctx.lineWidth = thickness
+        ctx.beginPath()
+        ctx.moveTo(...v0)
+        ctx.lineTo(...v1)
+        ctx.stroke()
+
+        if(thickness > 2) {
+          const left = Math.PI / 4 + 0.5 * (dir + 0.3) + bias * (Math.random() - 0.5)
+          drawBranch(ctx, v1, length * 0.9, thickness * 0.8, left, bias * 0.9)
+          const right = Math.PI / 4 + 0.5 * (dir - 0.3) + bias * (Math.random() - 0.5)
+          drawBranch(ctx, v1, length * 0.9, thickness * 0.8, right, bias * 0.9)
+        }
+
+        if (thickness < 5 && Math.random() * .3) {
+          ctx.save()
+          ctx.strokeStyle = '#c72c35'
+          const th = Math.random() * 6 + 3
+          ctx.lineWidth = th
+          ctx.beginPath()
+          ctx.moveTo(...v1)
+          ctx.lineTo(v1.x, v1.y - 2)
+          ctx.stroke()
+          ctx.restore()
+        }
+      }
+
+      const v0 = new Vector2D(256, 0)
+      drawBranch(ctx, v0, 50, 10, Math.PI / 180 * 90, 3)
+    }
+  </script>
+</body>
+</html>
